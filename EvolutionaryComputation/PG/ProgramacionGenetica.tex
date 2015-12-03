@@ -51,13 +51,34 @@ Desde las primeras propuestas hechas por Koza \cite{koza}, se han presentado con
 Por otra parte, con la introducción del algoritmo HaEA \cite{gomez} en la programación genética inductiva \cite{cub:gom:2}, se permitió un gran desarrollo debido a su gran capacidad de optimización y carencia de parámetros para ajustar. Los resultados pronto serán publicados y se espera que a partir de; se descubran nuevas técnicas y mejoras en los distintos campos de aplicación.
 
 \section{Propuesta}
-Teniendo en cuenta las principales conclusiones de J.Gómez \cite{gomez} en relación a la preservación de la diversidad como estrategia evolutiva y al análisis de los diferentes esquemas de selección realizado por T. Blicke \& L. Thiele\cite{blick:thiele}; se plantea encontrar un método para seleccionar individuos de la población, en el cual se favorezca la   exploración y explotación, como principios básicos para disminuir la perdida de diversidad y la probabilidad de estancamiento en un mínimo/máximo local. Es así, como se propone un híbrido entre ranking y ruleta.
+Teniendo en cuenta las principales conclusiones de J. Gómez \cite{gomez} en relación a la preservación de la diversidad como estrategia evolutiva y al análisis de los diferentes esquemas de selección realizado por T. Blicke \& L. Thiele\cite{blick:thiele}; se plantea encontrar un método para seleccionar individuos de la población, en el cual se favorezca la   exploración y explotación como principios básicos para disminuir la perdida de diversidad y la probabilidad de estancamiento en un mínimo/máximo local. El resultado es un híbrido entre selección por ruleta y selección por ranking.
 
-\subsection{Estrategia de Selección: Ruleta de Rango Estocástico}
+\subsection{Estrategia de Selección: Ruleta-Ranking}
+El procedimiento de selección propuesto, llamado inicialmente Ruleta-Ranking, se describe paso a paso a continuación:
+\begin{enumerate}
+\item Se normalizan las medidas de aptitud de cada individuo de la población usando escala decimal.
+\item Se normalizan los datos del paso anterior en el intervalo $[0,1]$
+\item Se ordenan de forma descendente los individuos de acuerdo su medida de aptitud normalizada, de manera que el mejor individuo sea el primero de la lista y el peor el último.
+\item Generar un número aleatorio usando una distribución normal con $\mu=0$ y $\sigma=\frac{1}{3}$, y aplicarle la función valor absoluto.
+\item Seleccionar el individuo con la medida de aptitud normalizada inmediatamente mayor al número aleatorio generado en el paso anterior.
+\item Retirar al individuo seleccionado de la lista y ajustar las probabilidades de los individuos restantes.
+\end{enumerate}
+En esta estrategia, los mejores individuos tienen mayor probabilidad de ser seleccionados inicialmente, sin embargo, con su salida de la lista de espera, se redistribuye la probabilidad en los individuos restantes, ofreciéndole prioridad a los nuevos mejores. Esta técnica permite exploración ya que por la forma de la distribución normal, existe la probabilidad de seleccionar individuos no tan buenos. Y permite explotación en menor medida, porque se seleccionan los mejores en mayor medida. 
+Para controlar la complejidad del algoritmo, se mantiene la sumatoria total de las medidas de aptitud normalizadas de los individuos en espera y cada vez que alguno es elegido, su medida de aptitud es restada del total y se aplica otra normalización respecto a este nuevo total.
 
+\paragraph{Comentario.}
+Al cambiar la forma de la distribución del número generado en el paso $4$, por una con $\mu=1$, se obtiene que la ejecución del algoritmo genético minimiza la función de aptitud.
 
+\subsection{Estrategia de Generación y Reemplazo}
+Para la generación de nuevos individuos se usó como estrategia el matrimonio, generando de a dos hijos por pareja. Sin embargo, el criterio de selección de pareja se dividió en dos: por similitud y por mejor medida de aptitud, teniendo en cuenta que el mejor individuo tiene $n-1$ oportunidades de elegir, el segundo mejor individuo tiene $n-2$ y así sucesivamente hasta que el penúltimo individuo solo pudiese elegir al peor ($n$ es el tamaño total de los individuos elegidos).
 
-\subsection{Estrategia de Reemplazo}
+Como estrategia de reemplazo se usó estado estable y generacional, en combinación con alguna de las estrategias de generación anteriormente descritas.
+
+\subsection{Función de Aptitud}
+Para la función de aptitud, como el resultado de cada programa en Funico es una predicción con relación a un modelo funcional interno, se propuso contar el numero de aciertos por cada individuo-programa de la población de acuerdo a un conjunto de consultas de entrenamiento y verificación. Experimentalmente se intentaron estrategias alternativas como penalización por malos patrones y tiempo de procesamiento consumido, sin embargo, los resultados no fueron favorables y se descartaron.
+
+\subsection{Inicialización}
+Para la inicialización se tomó como base el conjunto de consultas de entrenamiento, y a partir de estas se construyen arboles de maxima profundidad según la estructura sintáctica de Funico. 
 
 \section{Experimentos y Resultados}
 
