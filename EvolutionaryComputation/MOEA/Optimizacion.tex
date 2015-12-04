@@ -10,7 +10,6 @@
 
 \documentclass{llncs}
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx}
 
 
 \begin{document}
@@ -92,34 +91,11 @@ Para el calculo de la función de aptitud, se probaron estrategias alternativas 
 
 En el caso de la inicialización se intentó generar programas de tamaño aleatorio, respetando un mínimo de dos ecuaciones y un máximo fijado como parámetro. Pero debido a los malos resultados se optó por dejar el número de ecuaciones fijo y confiar en el operador DropEquation para obtener individuos de tamaño menor al máximo.
 \subsection{Ejecución}
-Para la ejecución de las diferentes estrategias se utilizó un mismo conjunto de consultas, cuyo objetivo, es hallar una expresión en Funico para calcular el módulo 3 (mod3(N)) de un número entero.
-El tamaño de la población es de 100, el total de iteraciones es de 1000, el máximo número de ecuaciones por individuo es de 6, la profundidad de cada individuo en la inicialización es de 3 y el parámetro $p$ para el reinicio de las probabilidades de selección de un operador de mutación fue fijado en $0.1$ .
-En \ref{Ejecucion_1} se muestran las medidas estadísticas del resultado de una ejecución, aplicando la estrategia de generación por mejor aptitud y reemplazo generacional. En \ref{Ejecucion_2} , se presentan las medidas resultado de aplicar generación por mejor aptitud y reemplazo de estado estable. La implementación de este algoritmo se puede encontrar como un archivo anexo a este, esta implmentación fue realizada completamente desde cero en lenguaje JAVA, a excepción de la librería de Funico, la cual fue proporcionada por el autor-\cite{cub:gom}. La clase que contiene el método de ejecución principal es jp.methods.gp.TestFunico.java .
-
-\paragraph{Aclaración.}
-Las estrategias de generación por similitud aunque fueron implementadas y ejecutadas, no se estudiaron con más detalle debido a su baja tasa de convergencia. De alrededor de 20 experimentos, en ningún momento encontró al menos un individuo solución (Individuo con aptitud 1.0)
-
-\begin{figure}
-  \centering
-    \includegraphics[width=0.95\textwidth]{GPBestFitGen}
-  \caption{Generación por Mejor Aptitud  y Reemplazo Generacional}
-  \label{Ejecucion_1}
-\end{figure}
-
-
-\begin{figure}
-  \centering
-    \includegraphics[width=0.95\textwidth]{GPBestFitSteady}
-  \caption{Generación por Mejor Aptitud  y Reemplazo de Estado Estable}
-  \label{Ejecucion_2}
-\end{figure}
+Para la ejecución de las diferentes estrategias se utilizó un mismo conjunto de consultas, con el objetivo de hallar una expresión en Funico para calcular el módulo 3 (mod3(N)) de un número entero.
+El tamaño de la población es 100, el total de iteraciones es 1000, el máximo número de ecuaciones por individuo es 6, la profundidad de cada individuo en la inicialización es 3 y el parámetro $p$ para el reinicio de las probabilidades de selección de un operador de mutación es de $0.1$.
 
 
 \section{Conclusiones}
-
-\begin{itemize}
-\item ...
-\end{itemize}
 
 \begin{thebibliography}{8}
 %
@@ -163,6 +139,7 @@ Tobias Blickle \& Lothar Thiele:
 A Comparison of Selection Schemes used in Genetic Algorithms.
 Computer Engineering and Communication Networks Lab.
 Swiss Federal Institute of Technology. (1995)
+Bogotá (2015)
 
 \end{thebibliography}
 
