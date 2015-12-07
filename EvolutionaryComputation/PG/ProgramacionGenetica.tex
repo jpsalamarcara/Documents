@@ -15,9 +15,9 @@
 
 \begin{document}
 
-\title{Programación Genética Funcional Inductiva en Funico}
+\title{Programación Genética Inductiva, un acercamiento práctico usando el lenguaje Funico}
 %
-\titlerunning{Programación Genética}  % abbreviated title (for running head)
+\titlerunning{Programación Genética Inductiva}  % abbreviated title (for running head)
 %                                     also used for the TOC unless
 %                                     \toctitle is used
 %
@@ -44,7 +44,7 @@ In this paper, an experimental study of the different evolutionary strategies th
 
 \section{Introducción}
 La programación genética es un campo de investigación de la computación evolutiva, en el cual, mediante el uso de algoritmos genéticos, se pretende optimizar una población de individuos pertenecientes al dominio de algún lenguaje de programación, esto se hace de acuerdo a una determinada función de aptitud.
-En este documento, se presenta un estudio experimental acerca de las diferentes estrategias evolutivas que se pueden adoptar para aplicar la programación genética particularmente en el dominio del lenguaje de programación funcional Funico \cite{cub:gom}, desarrollado por Edwin C. Cubides.
+En este documento, se presenta un estudio experimental acerca de las diferentes estrategias evolutivas que se pueden adoptar para aplicar la programación genética particularmente en el dominio del lenguaje de programación funcional Funico \cite{cub:gom}, desarrollado por E. Cubides.
 
 %Fin de la Introducción
 \section{Estado del Arte}
@@ -64,7 +64,7 @@ El procedimiento de selección propuesto, llamado inicialmente Ruleta-Ranking, s
 \item Seleccionar el individuo con la medida de aptitud normalizada inmediatamente mayor al número aleatorio generado en el paso anterior.
 \item Retirar al individuo seleccionado de la lista y ajustar las probabilidades de los individuos restantes.
 \end{enumerate}
-En esta estrategia, los mejores individuos tienen mayor probabilidad de ser seleccionados inicialmente, sin embargo, con su salida de la lista de espera, se redistribuye la probabilidad en los individuos restantes, ofreciéndole prioridad a los nuevos mejores. Esta técnica permite exploración ya que por la forma de la distribución normal, existe la probabilidad de seleccionar individuos no tan buenos. Y permite explotación, porque se seleccionan los mejores en mayor proporcion. 
+En esta estrategia, los mejores individuos tienen mayor probabilidad de ser seleccionados inicialmente, sin embargo, con su salida de la lista de espera, se redistribuye la probabilidad en los individuos restantes, ofreciéndole prioridad a los nuevos mejores. Esta técnica permite exploración ya que por la forma de la distribución normal, existe la probabilidad de seleccionar individuos no tan buenos. Y permite explotación, porque se seleccionan los mejores en mayor proporción. 
 Para controlar la complejidad del algoritmo, se mantiene la sumatoria total de las medidas de aptitud normalizadas de los individuos en espera y cada vez que alguno es elegido, su medida de aptitud es restada del total y se aplica otra normalización respecto a este nuevo total.
 
 \paragraph{Comentario.}
@@ -73,12 +73,12 @@ Al cambiar la forma de la distribución del número generado en el paso $4$, por
 \subsection{Estrategia de Generación y Reemplazo}
 Para la generación de nuevos individuos se propone como estrategia el matrimonio, generando de a dos hijos por pareja. Sin embargo, el criterio de selección de pareja se dividió en dos: por similitud y por mejor medida de aptitud, teniendo en cuenta que el mejor individuo tiene $n-1$ oportunidades de elegir, el segundo mejor individuo tiene $n-2$ y así sucesivamente hasta que el penúltimo individuo solo pudiese elegir al peor ($n$ es el tamaño total de los individuos elegibles).
 
-Como estrategia de reemplazo se propuso estado estable y generación, en combinación con alguna de las estrategias de generación anteriormente descritas.
+Como estrategia de reemplazo se propuso estado estable y reemplazo generacional, en combinación con alguna de las estrategias de generación anteriormente descritas.
 
 \subsection{Función de Aptitud}
 Para la función de aptitud, como el resultado de cada programa en Funico es una predicción con relación a un modelo funcional interno (conjunto de ecuaciones), se propuso contar el número de aciertos por cada individuo (programa) de la población de acuerdo a un conjunto de consultas de entrenamiento y verificación que son fijadas como parámetros. Normalizando respecto al total de consultas de entrenamiento. Ademas se penaliza a aquellos individuos que presenten problemas léxicos, sintácticos y de ejecución.
 \subsection{Inicialización}
-Para la inicialización se tomó como base el conjunto de consultas de entrenamiento, y a partir de estas se construyen arboles completos según la estructura sintáctica de Funico. Los programas pueden tener un número de ecuaciones fijo o variable, sin embargo, siempre debe ser mayor de 2.
+Para la inicialización se tomó como base el conjunto de consultas de entrenamiento, y a partir de estas se construyen arboles completos según la estructura sintáctica de Funico. Los programas pueden tener un número de ecuaciones fijo o variable, sin embargo, este siempre debe ser mayor de 2.
 
 \subsection{Operadores}
 En cuanto a los operadores, se propone el uso de un operador de cruce y cuatro de mutación, estos últimos siguiendo un esquema de auto adaptabilidad similar al de HaEA \cite{gomez}. En la inicialización se fija una probabilidad de 0.5 por cada operador de mutación, y de acuerdo a las veces que el operador es ejecutado, se determina si aportó a la mejora de la medida de aptitud del individuo ó no; de acuerdo a esto se premia o se castiga, aumentando o disminuyendo la probabilidad de ser elegido nuevamente para ese individuo particular. Teniendo en cuenta que muchas veces un operador puede ser castigado, causando un incremento en la probabilidad de estancar la búsqueda en un máximo (ó mínimo) local, se introduce un reinicio de las probabilidades de todos lo operadores de mutación para un individuo particular, este reinicio es un proceso estocástico que sigue una distribución de probabilidad binomial con $p$ fijado como parámetro de entrada.
@@ -97,7 +97,7 @@ El tamaño de la población es de 100, el total de iteraciones es de 1000, el m�
 En \ref{Ejecucion_1} se muestran las medidas estadísticas del resultado de una ejecución, aplicando la estrategia de generación por mejor aptitud y reemplazo generacional. En \ref{Ejecucion_2} , se presentan las medidas resultado de aplicar generación por mejor aptitud y reemplazo de estado estable. La implementación de este algoritmo se puede encontrar como un archivo anexo a este, esta implmentación fue realizada completamente desde cero en lenguaje JAVA, a excepción de la librería de Funico, la cual fue proporcionada por el autor-\cite{cub:gom}. La clase que contiene el método de ejecución principal es jp.methods.gp.TestFunico.java .
 
 \paragraph{Aclaración.}
-Las estrategias de generación por similitud aunque fueron implementadas y ejecutadas, no se estudiaron con más detalle debido a su baja tasa de convergencia. De alrededor de 20 experimentos, en ningún momento encontró al menos un individuo solución (Individuo con aptitud 1.0)
+Las estrategias de generación por similitud aunque fueron implementadas y ejecutadas, no se estudiaron con más detalle debido a su baja tasa de convergencia. De alrededor de 20 experimentos de 1000 iteraciones, en ningún momento encontró al menos un individuo solución (Individuo con aptitud 1.0)
 
 \begin{figure}
   \centering
@@ -118,7 +118,9 @@ Las estrategias de generación por similitud aunque fueron implementadas y ejecu
 \section{Conclusiones}
 
 \begin{itemize}
-\item ...
+\item Una estrategia de reemplazo poblacional de estado estable, aumenta considerablemente la probabilidad de hallar individuos solución en el dominio de la programación genética.
+\item La correcta combinación entre el proceso de generación de la población inicial y el esquema de exploración,  pueden mejorar o empeorar la velocidad de convergencia del algoritmo genético, entonces, estás estrategias deben ser planteadas de acuerdo al dominio del espacio de busqueda.
+\item En el campo de la inteligencia artificial, la programación genética inductiva, puede considerarse una técnica para emular la creatividad y el pensamiento inductivo, sin embargo, su alcance puede extenderse de acuerdo a la naturaleza del lenguaje base.
 \end{itemize}
 
 \begin{thebibliography}{8}
